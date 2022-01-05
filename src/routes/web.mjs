@@ -67,10 +67,15 @@ const initRoutes = app => {
         postController.checkAuthorPost,
         postController.deletePost
     )
+    router.get('/posts',
+        postController.getPosts
+    )
+    router.get('/posts/:postId/recommend',
+        postController.postsRe
+    )
     router.get('/tags/:tagId',
         tagController.getTag
     )
-
     app.use("/api/v1/", router)
     app.use((req, res, next) => {
         next(createError(404))

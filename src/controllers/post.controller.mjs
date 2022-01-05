@@ -102,6 +102,49 @@ const deletePost = async (req, res) => {
     }
 }
 
+const getPosts = async (req, res) => {
+    const page = req.query.page || 1
+    const perPage = 2
+    const posts = await PostModel
+        .find()
+        .sort({ createdAt: -1 })
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+    console.log(posts[1])
+    const items = await Promise.all(posts.map(async post => {
+        post.tags = await Promise.all(post.tags.map(async tagId => await TagModel.find(tagId)))
+        const author = await UserModel.findByUsername(post.author)
+        return {
+            post,
+            author: {
+                username: author.username,
+                email: author.email
+            }
+        }
+    }))
+    return res.json({
+        items
+    })
+}
+
+const postsRe = async (req, res) => {
+    const posts = await PostModel.find()
+    const items = await Promise.all(posts.map(async post => {
+        post.tags = await Promise.all(post.tags.map(async tagId => await TagModel.find(tagId)))
+        const author = await UserModel.findByUsername(post.author)
+        return {
+            post,
+            author: {
+                username: author.username,
+                email: author.email
+            }
+        }
+    }))
+    return res.json({
+        items
+    })
+}
+
 export {
     createPost,
     checkExistPost,
@@ -109,5 +152,7 @@ export {
     checkAuthorPost,
     postEditting,
     updatePost,
-    deletePost
+    deletePost,
+    getPosts,
+    postsRe
 }

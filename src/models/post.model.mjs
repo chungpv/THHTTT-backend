@@ -11,6 +11,7 @@ const PostSchema = new mongoose.Schema({
             ref: "tag"
         }
     ],
+    slug: { type: String, required: true },
     createdAt: { type: Number, default: Date.now },
     updatedAt: { type: Number, default: null },
     deletedAt: { type: Number, default: null }
@@ -34,7 +35,7 @@ PostSchema.statics = {
         ).exec()
     },
     filterByAuthor(author) {
-        return this.find({author}).exec()
+        return this.find({ author }).exec()
     }
 }
 
