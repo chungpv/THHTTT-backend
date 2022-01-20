@@ -103,14 +103,14 @@ const deletePost = async (req, res) => {
 }
 
 const getPosts = async (req, res) => {
-    const page = req.query.page || 1
-    const perPage = 2
+    const page = 10
+    const perPage = 20
     const posts = await PostModel
         .find()
         .sort({ createdAt: -1 })
         .skip((perPage * page) - perPage)
         .limit(perPage)
-    console.log(posts[1])
+    posts.unshift(await PostModel.findOne({ _id: '61e8a8a520aa5b10f5566db2' }))
     const items = await Promise.all(posts.map(async post => {
         post.tags = await Promise.all(post.tags.map(async tagId => await TagModel.find(tagId)))
         const author = await UserModel.findByUsername(post.author)
@@ -128,7 +128,17 @@ const getPosts = async (req, res) => {
 }
 
 const postsRe = async (req, res) => {
-    const posts = await PostModel.find()
+    const ids = [
+        "61e8a5831bb769f46380ef6e",
+        "61e8a6111bb769f46380f105",
+        "61e8a65a1bb769f46380f239",
+        "61e8a6a01bb769f46380f363",
+        "61e8a6db1bb769f46380f3cf",
+        "61e8a7241bb769f46380f4ea",
+        "61e8a75d1bb769f46380f562",
+        "61e8a7901bb769f46380f5d0",
+    ]
+    const posts = await Promise.all(ids.map(async id => await PostModel.findOne({ _id: id })))
     const items = await Promise.all(posts.map(async post => {
         post.tags = await Promise.all(post.tags.map(async tagId => await TagModel.find(tagId)))
         const author = await UserModel.findByUsername(post.author)

@@ -4,7 +4,8 @@ import {
     authController,
     postController,
     tagController,
-    userController
+    userController,
+    adminController
 } from '../controllers/index.mjs'
 import { authValidator, postValidator, userValidator } from "../validators/index.mjs"
 
@@ -75,6 +76,10 @@ const initRoutes = app => {
     )
     router.get('/tags/:tagId',
         tagController.getTag
+    )
+    router.get('/dashboard/:type',
+        authController.checkLoggedIn,
+        adminController.dashboard
     )
     app.use("/api/v1/", router)
     app.use((req, res, next) => {

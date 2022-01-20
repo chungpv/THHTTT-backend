@@ -1,6 +1,4 @@
-import { validationResult } from 'express-validator'
 import env from 'dotenv'
-import * as postService from '../services/post.service.mjs'
 import PostModel from '../models/post.model.mjs'
 import TagModel from '../models/tag.model.mjs'
 import UserModel from '../models/user.model.mjs'
